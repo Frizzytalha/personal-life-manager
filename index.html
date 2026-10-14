@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#172554">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Life Manager">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Personal Life Manager</title>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="eyebrow">YOUR PRIVATE ORGANIZER</p>
+      <h1>Life Manager</h1>
+      <p id="todayLabel" class="muted"></p>
+    </div>
+    <button id="notifyBtn" class="secondary">Enable alerts</button>
+  </header>
+
+  <main>
+    <section class="summary-grid">
+      <article class="summary"><span>Available balance</span><strong id="balance">৳0</strong></article>
+      <article class="summary"><span>Open tasks</span><strong id="openTasks">0</strong></article>
+      <article class="summary"><span>Upcoming reminders</span><strong id="upcoming">0</strong></article>
+    </section>
+
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab active" data-view="home">Overview</button>
+      <button class="tab" data-view="study">Study</button>
+      <button class="tab" data-view="money">Money</button>
+      <button class="tab" data-view="tasks">Tasks</button>
+      <button class="tab" data-view="career">Career</button>
+    </nav>
+
+    <section id="homeView" class="view">
+      <div class="section-head"><div><h2>Quick capture</h2><p class="muted">Add it now, organize it later.</p></div></div>
+      <form id="quickForm" class="panel">
+        <label>What do you need to remember?<input id="quickTitle" required maxlength="120" placeholder="e.g. Submit AI assignment"></label>
+        <div class="two">
+          <label>Category<select id="quickCategory"><option value="study">Study</option><option value="task">Daily task</option><option value="career">Career</option></select></label>
+          <label>Due date & time<input id="quickDue" type="datetime-local"></label>
+        </div>
+        <button class="primary">Save reminder/task</button>
+      </form>
+      <div class="section-head"><h2>Next up</h2><button id="showAllTasks" class="text-button">View tasks</button></div>
+      <div id="homeUpcoming" class="stack"></div>
+      <div class="note"><strong>Reminder note:</strong> On iPhone, a PWA cannot reliably schedule local notifications for a future time by itself. This app can show in-app reminders and browser notifications while it is active. For dependable background alerts, use Apple Reminders or add a push-notification server later.</div>
+    </section>
+
+    <section id="studyView" class="view hidden">
+      <div class="section-head"><div><h2>Study planner</h2><p class="muted">Exams, assignments, presentations and class routine.</p></div></div>
+      <form id="studyForm" class="panel">
+        <label>Title<input id="studyTitle" required placeholder="e.g. Artificial Intelligence final exam"></label>
+        <div class="two">
+          <label>Type<select id="studyType"><option>Exam</option><option>Assignment</option><option>Presentation</option><option>Class</option><option>Viva / Lab</option><option>University fee</option></select></label>
+          <label>Due date & time<input id="studyDue" type="datetime-local"></label>
+        </div>
+        <label>Notes<textarea id="studyNotes" rows="2" placeholder="Room, preparation topics, submission details..."></textarea></label>
+        <button class="primary">Add study item</button>
+      </form>
+      <div id="studyList" class="stack"></div>
+    </section>
+
+    <section id="moneyView" class="view hidden">
+      <div class="section-head"><div><h2>Money tracker</h2><p class="muted">Stored only in this browser on this device.</p></div></div>
+      <div class="money-grid">
+        <article class="summary"><span>Income</span><strong id="incomeTotal">৳0</strong></article>
+        <article class="summary"><span>Expenses</span><strong id="expenseTotal">৳0</strong></article>
+        <article class="summary"><span>Net cash flow</span><strong id="netTotal">৳0</strong></article>
+      </div>
+      <form id="moneyForm" class="panel">
+        <label>Record type<select id="moneyType"><option value="income">Money received / income</option><option value="expense">Expense</option><option value="lent">I lent someone money</option><option value="borrowed">I borrowed money</option><option value="repayment">Loan repayment received</option><option value="paidback">I paid back a loan</option></select></label>
+        <div class="two">
+          <label>Amount (BDT)<input id="moneyAmount" required type="number" min="1" step="0.01" inputmode="decimal" placeholder="500"></label>
+          <label>Date<input id="moneyDate" required type="date"></label>
+        </div>
+        <label>Person / source / category<input id="moneyPerson" maxlength="100" placeholder="e.g. Home, lunch, Rahim"></label>
+        <label>Details<input id="moneyDetails" maxlength="180" placeholder="Optional note"></label>
+        <button class="primary">Save transaction</button>
+      </form>
+      <h3>Transactions & loans</h3><div id="moneyList" class="stack"></div>
+    </section>
+
+    <section id="tasksView" class="view hidden">
+      <div class="section-head"><div><h2>Daily tasks</h2><p class="muted">Small steps, less mental clutter.</p></div></div>
+      <form id="taskForm" class="panel">
+        <label>Task<input id="taskTitle" required maxlength="120" placeholder="e.g. Practice C++ for 30 minutes"></label>
+        <div class="two">
+          <label>Priority<select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select></label>
+          <label>Due date & time<input id="taskDue" type="datetime-local"></label>
+        </div>
+        <button class="primary">Add task</button>
+      </form>
+      <div id="taskList" class="stack"></div>
+    </section>
+
+    <section id="careerView" class="view hidden">
+      <div class="section-head"><div><h2>Career & goals</h2><p class="muted">Track learning, job applications and personal goals.</p></div></div>
+      <form id="goalForm" class="panel">
+        <label>Goal<input id="goalTitle" required maxlength="120" placeholder="e.g. Finish HTML/CSS basics"></label>
+        <div class="two">
+          <label>Target date<input id="goalDue" type="date"></label>
+          <label>Category<select id="goalCategory"><option>Learning</option><option>Job application</option><option>Freelancing</option><option>Income target</option><option>Personal</option></select></label>
+        </div>
+        <button class="primary">Add goal</button>
+      </form>
+      <div id="goalList" class="stack"></div>
+    </section>
+
+    <section class="footer-actions">
+      <button id="exportBtn" class="secondary">Export backup (JSON)</button>
+      <label class="import-label secondary">Import backup<input id="importFile" type="file" accept="application/json"></label>
+      <button id="clearBtn" class="danger">Delete all local data</button>
+    </section>
+  </main>
+  <footer><p>Personal Life Manager · Local-first · No account required</p><p class="muted small">Back up regularly. Clearing Safari website data may erase your records.</p></footer>
+  <script src="app.js"></script>
+</body>
+</html>
